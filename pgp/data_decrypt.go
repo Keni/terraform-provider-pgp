@@ -2,7 +2,6 @@ package pgp
 
 import (
 	"bytes"
-	"compress/gzip"
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
@@ -133,24 +132,6 @@ func decrypt(entity *openpgp.Entity, encrypted []byte, encoding string) ([]byte,
 	read, err := ioutil.ReadAll(messageReader.UnverifiedBody)
 	if err != nil {
 		return []byte{}, fmt.Errorf("Error reading unverified body: %v", err)
-	}
-
-	if encoding == "armored" {
-		// Uncompress message
-		reader := bytes.NewReader(read)
-		uncompressed, err := gzip.NewReader(reader)
-		if err != nil {
-			return []byte{}, fmt.Errorf("Error initializing gzip reader: %v", err)
-		}
-		defer uncompressed.Close()
-
-		out, err := ioutil.ReadAll(uncompressed)
-		if err != nil {
-			return []byte{}, err
-		}
-
-		// Return output - an unencoded, unencrypted, and uncompressed message
-		return out, nil
 	}
 
 	out, err := ioutil.ReadAll(bytes.NewReader(read))
