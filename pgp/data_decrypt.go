@@ -47,6 +47,18 @@ func dataSourceDecrypt() *schema.Resource {
 					return
 				},
 			},
+			"root_path": {
+				Type:     schema.TypeString,
+				Required: false,
+			},
+			"secret_type": {
+			Type:     schema.TypeString,
+			Required: false,
+			},
+			"postfix": {
+			Type:     schema.TypeString,
+			Required: false,
+			},
 		},
 	}
 }
